@@ -117,7 +117,21 @@ class TreePath(object):
             else:
                 yield item
 
+    @staticmethod # experimental
+    def _iterItems(variable):
+        if isinstance(variable, (str, int, float, bool)):
+            yield None
+        elif isinstance(variable, dict):
+            for k,v in variable.items():
+                yield k,v
+        elif isinstance(variable, (list, tuple)):
+            for k in range(0,len(variable)):
+                yield k, variable[k]
+        else:
+            raise StopIteration
+
     @staticmethod
+    # The _iterKeys returns a single interface onto dict and list objects for "getting" underlying values
     def _iterKeys(variable):
         if isinstance(variable, (str, int, float, bool)):
             yield None
@@ -130,24 +144,34 @@ class TreePath(object):
         else:
             raise StopIteration
 
+    # Generator returning all leaf node paths for a given object (without first enumerating all paths).
     @classmethod
-    def _all_paths(cls, data, path=None, paths=None):
+    def _iterLeaves(cls, obj, path=None):
         if path is None:
             path=[]
-        if paths is None:
-            paths=[]
-        keys = list(cls._iterKeys(data))
-        for k in keys:
-            try:
-                paths.append(path+[k])
-            except ValueError:
-                print (k)
-            if isinstance(data[k], (dict, list)):
-                paths.extend(cls._all_paths(data[k], path + [k], []))
+        for key in cls._iterKeys(obj):
+            if isinstance(obj[key], (dict, list)) and len(obj[key])>0:
+                for p in cls._iterLeaves(obj[key], path + [key]):
+                    yield p
             else:
-                pass
-        return paths
+                yield(path + [key])
 
+    # Generator returning all paths from source in object
+    @classmethod
+    def _iterPaths(cls, data, path=None):
+        if path is None:
+            path=[]
+        keys = cls._iterKeys(data)
+        for k in keys:
+            if isinstance(data[k], (dict, list)):
+                for p in cls._iterPaths(data[k], path + [k]):
+                    yield p
+            else:
+                yield path + [k]
+
+    @classmethod
+    def _all_paths(cls, data, path=None, paths=None):
+        return list(cls._iterPaths(data))
 
     @staticmethod
     def _shortest_common_path(path_list):
