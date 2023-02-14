@@ -387,11 +387,11 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="PhoneCountryCode" type="xsd:string"/>
-    <xs:element name="PhoneAreaCode" type="xsd:string"/>
-    <xs:element name="PhoneNumber" type="xsd:string"/>
-    <xs:element name="PhoneExtension" type="xsd:string"/>
-    <xs:element name="PhoneUnstructured" type="xsd:string"/>
+    <xs:element name="PhoneCountryCode" type="xs:string"/>
+    <xs:element name="PhoneAreaCode" type="xs:string"/>
+    <xs:element name="PhoneNumber" type="xs:string"/>
+    <xs:element name="PhoneExtension" type="xs:string"/>
+    <xs:element name="PhoneUnstructured" type="xs:string"/>
 
 
     <xs:element name = "Person" substitutionGroup="CommonExtensionBObj">
@@ -767,11 +767,11 @@
             </xs:sequence>
         </xs:extension>
     </xs:complexType>
-    <xs:simpleType name="big_string">
+    <xs:complexType name="big_string">
         <xs:extension base="xs:string">
             <xs:attribute name="big" type="xs:string"/>
         </xs:extension>
-    </xs:simpleType>
+    </xs:complexType>
 
     <xs:element name="test_by_reference" type="alt_type"/>
 

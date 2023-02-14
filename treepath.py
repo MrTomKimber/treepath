@@ -163,11 +163,11 @@ class TreePath(object):
             path=[]
         keys = cls._iterKeys(data)
         for k in keys:
+            yield path + [k]
             if isinstance(data[k], (dict, list)):
                 for p in cls._iterPaths(data[k], path + [k]):
                     yield p
-            else:
-                yield path + [k]
+            
 
     @classmethod
     def _all_paths(cls, data, path=None, paths=None):
